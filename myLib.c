@@ -29,7 +29,7 @@ void drawImage3 (int r, int c, int width, int height, const u16* image) {
 	for (int row = 0; row < height; row++) {
 
 		//modifies the src and dst pointers to point to beginning of next row
-		src_start_pointer = (unsigned short*) (OFFSET_SRC(r + row, 0, width) + image);
+		src_start_pointer = (unsigned short*) (OFFSET_SRC(row, 0, width) + image);
 
 		//with each run of the loop, we move to the next thing
 		dst_start_pointer = OFFSET_DST(r + row, c) + videoBuffer;
