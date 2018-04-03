@@ -61,10 +61,20 @@ void rebuff(int r, int c, int width, int height, const u16* background) {
 	}
 }
 
+//Draws the background in the beginning
 void drawBackground(const u16* image) {
 	DMA[3].src = image;
 	DMA[3].dst = videoBuffer;
 	DMA[3].cnt = 0x9600 | DMA_NOW | DMA_ON;
+}
+
+//Draws bullet
+void drawBullet(int r, int c, int width, int height) {
+	for (int row = 0; row < height; row++) {
+		for (int col = 0; col < width; col++) {
+			setPixel(row + r, col + c, BLACK);
+		}
+	}
 }
 
 

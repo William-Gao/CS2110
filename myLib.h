@@ -453,13 +453,12 @@ void drawImage3(int r, int c, int width, int height, const u16* image);
 void drawBackground(const u16* image);
 void setPixel(int row, int col, unsigned short color);
 void rebuff(int r, int c, int width, int height, const u16* background);
+void drawBullet(int r, int c, int width, int height);
 
 #define UNUSED(x) (void)(x)
 #define OFFSET(r, c, rowlen) ((c) + (rowlen)*(r))
 
-/*
-typdef stuct_list {
-    struct_list* head;
-    int size;
-}   list;
-*/
+
+typedef struct Bullet {
+    unsigned int r,c;
+} TankBullet;
