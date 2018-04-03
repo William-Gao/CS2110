@@ -20,9 +20,6 @@ volatile unsigned short *videoBuffer = (volatile unsigned short *)0x6000000;
 
 void drawImage3 (int r, int c, int width, int height, const u16* image) {
 
-	// DMA[3].src = (volatile unsigned short*) image;
-	// DMA[3].dst = (volatile unsigned short*) videoBuffer;
-	// DMA[3].cnt = len | DMA_NOW | DMA_ON;
 	volatile unsigned short* dst_start_pointer;
 	volatile unsigned short* src_start_pointer;
 
@@ -40,9 +37,13 @@ void drawImage3 (int r, int c, int width, int height, const u16* image) {
 	}
 
 }
-// void drawPixel(unsigned short* videoBuffer, unsigned short Pixel) {
 
-// }
+
+// setPixel -- set the pixel at (row, col) to color
+void setPixel(int row, int col, unsigned short color) {
+	videoBuffer[OFFSET(row, col, 240)] = color;
+}
+
 
 void waitForVblank() {
 	while (SCANLINECOUNTER > 160)
