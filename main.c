@@ -1,19 +1,20 @@
 
 #include "myLib.h"
 #include "stdio.h"
-#include "garbage.h"
-#include "tank.h"
+#include "images/tiger.h"
 #include "text.h"
 
 int main() {
 	REG_DISPCNT = MODE3 | BG2_ENABLE;
 
-	//set up tank at 200 x 55
-
+	//Starting location of the first tank
 	int init_r = 100;
 	int init_c = 95;
-	drawImage3(init_r, init_c, PIXEL_TANK_WIDTH, PIXEL_TANK_HEIGHT, pixel_tank);
 
+	//draws the starting location of the tank
+	drawImage3(init_r, init_c, TIGER_V2_WIDTH, TIGER_V2_HEIGHT, Tiger_v2);
+
+	//Star
 	int curr_r = init_r;
 	int curr_c = init_c;
 
@@ -32,6 +33,7 @@ int main() {
 			//b/c we're going up, it has to be 'minus'
 		}
 		if (KEY_DOWN_NOW(BUTTON_DOWN)) {
+			// int bottom_wall = 160 - 
 			if (curr_r < 123) {
 				curr_r = curr_r + 3;
 			}
@@ -48,7 +50,7 @@ int main() {
 				curr_c = curr_c - 3;
 			}
 		}
-		drawImage3(curr_r, curr_c, PIXEL_TANK_WIDTH, PIXEL_TANK_HEIGHT, pixel_tank);
+	drawImage3(curr_r, curr_c, TIGER_V2_WIDTH, TIGER_V2_HEIGHT, Tiger_v2);
 		//  else {
 		// 	drawImage3(0, 0, GARBAGE_WIDTH, GARBAGE_HEIGHT, garbage);
 		// }
