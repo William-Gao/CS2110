@@ -1,60 +1,38 @@
-################################################################################
-# These are variables for the GBA toolchain build
-# You can add others if you wish to
-# William Gao
-################################################################################
+CC = gcc
+CFLAGS = -std=c99 -pedantic -Wall -Werror -Wextra
+DEBUG_FLAGS = -g -DDEBUG
 
-# The name of your desired GBA game
-# This should be a just a name i.e MyFirstGBAGame
-# No SPACES AFTER THE NAME.
-PROGNAME = DefendBerlin!
+run-test : build-debug
+	./test
 
-# Here you must put a list of all of the object files
-# that will be compiled into your program. For example
-# if you have main.c and myLib.c then in the following
-# line you would put main.o and myLib.o
-OFILES = main.o myLib.o images/tiger.o images/field.o text.o font.o
+run-gdb : build-debug
+	gdb ./test
 
-################################################################################
-# These are various settings used to make the GBA toolchain work
-# DO NOT EDIT BELOW.
-################################################################################
+run-valgrind : build-debug
+	valgrind --leak-check=yes --show-reachable=yes --tool=memcheck ./test
 
-.PHONY: all
-all : CFLAGS += $(CRELEASE) -I../shared
-all : LDFLAGS += $(LDRELEASE)
-all: $(PROGNAME).gba
-	@echo "[FINISH] Created $(PROGNAME).gba"
+build-debug : CFLAGS += $(DEBUG_FLAGS)
+build-debug : verify circ_list.o array_list.o test.o circ_list.h array_list.h list.h
+	$(CC) $(CFLAGS) test.o circ_list.o array_list.o -o test
 
-include /opt/cs2110-tools/GBAVariables.mak
+circ_list.o : circ_list.c circ_list.h list.h
+	$(CC) $(CFLAGS) -c circ_list.c
 
-debug : CFLAGS += $(CDEBUG) -I../shared
-debug : LDFLAGS += $(LDDEBUG)
-debug : $(PROGNAME).gba
-	@echo "[FINISH] Created $(PROGNAME).gba"
+array_list.o : array_list.c array_list.h list.h
+	$(CC) $(CFLAGS) -c array_list.c
 
-$(PROGNAME).gba : $(PROGNAME).elf
-	@echo "[LINK] Linking objects together to create $(PROGNAME).gba"
-	@$(OBJCOPY) -O binary $(PROGNAME).elf $(PROGNAME).gba
+test.o : test.c circ_list.h array_list.h list.h
+	$(CC) $(CFLAGS) -c test.c
 
-$(PROGNAME).elf : crt0.o $(GCCLIB)/crtbegin.o $(GCCLIB)/crtend.o $(GCCLIB)/crti.o $(GCCLIB)/crtn.o $(OFILES) libc_sbrk.o
-	$(CC) -o $(PROGNAME).elf $^ $(LDFLAGS)
-
-.PHONY : vba
-vba : CFLAGS += $(CRELEASE) -I../shared
-vba : LDFLAGS += $(LDRELEASE)
-vba : $(PROGNAME).gba
-	@echo "[EXECUTE] Running Emulator VBA-M"
-	vbam $(VBAOPT) $(PROGNAME).gba >emulator.log 2>&1
-
-.PHONY : med
-med : CFLAGS += $(CRELEASE) -I../shared
-med : LDFLAGS += $(LDRELEASE)
-med : $(PROGNAME).gba
-	@echo "[EXECUTE] Running emulator Mednafen"
-	@mednafen $(MEDOPT) $(PROGNAME).gba >emulator.log 2>&1
-
-.PHONY : clean
 clean :
-	@echo "[CLEAN] Removing all compiled files"
-	rm -f *.o *.elf *.gba *.log
+	rm -f *.o test
+
+submit : verify
+	tar -czf list_submission.tar.gz circ_list.c array_list.c
+
+verify : verify.sh
+	@echo @/bin/bash verify.sh
+
+tarball:
+	tar -czf hw10.tar.gz array_list.c array_list.h circ_list.c circ_list.h list.h test.c verify.sh Makefile
+
