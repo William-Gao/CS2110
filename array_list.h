@@ -51,4 +51,7 @@ int remove_from_array_list(array_list_t* arr, int index, void** data_out);
 /* Mutators */
 int trim_to_size(array_list_t*);
 
+/* Other Helper methods */
+int resize(array_list_t* arr, int index);
+
 #endif /* ARRAY_LIST_H */

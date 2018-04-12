@@ -83,7 +83,8 @@ int test_add_outside_capacity(){
     //Add a single item
     int *a = malloc(sizeof(int));
     *a = 42;
-    assert(add_to_array_list(list, 11, a) == 0);
+    int test = add_to_array_list(list, 11, a);
+    assert(test == 0);
 
     //Get item at 11
     assert(*a == *((int*)(list->entries[11])));

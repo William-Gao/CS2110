@@ -169,62 +169,170 @@ array_list_t* deep_copy_array_list(array_list_t *list_to_copy, list_copy copy_fu
  * @param data data you're putting into the array list
  * @return 0 if add operation succeeded, non-zero otherwise
  */
+// int add_to_array_list(array_list_t* arr, int index, void* data)
+// {   
+
+//     //TODO: Double check on error stuff
+//     if (arr == NULL) {
+//         return 1;
+//     }
+//     int newSize = arr->size + 1;
+//     int size = arr->size;
+
+//     //If index is negative, we correct it to be the corresponding positive one
+//     while(index < 0) {
+//         index = index + newSize;
+//     }
+
+//     //Need to resize
+
+//     // if (!((arr->size < arr->capacity) && (index <= arr->capacity))) {
+//         int success = resize(arr, index);
+//         if (success == 1) {
+//             //Resizing failed
+//             return 1;
+//          }
+//     // }
+//     // if (size == cap) {
+//     //     int success = resize(arr, index);
+//     //     if (success == 1) {
+//     //         //Resizing failed
+//     //         return 1;
+//     //     }
+//     // }
+
+//     //ADDING PORTION
+//     //At this point, we know the index is correct and we know the array is big enough
+
+//     //If adding to the back
+//     if (index == size) {
+//         arr->entries[index] = data;
+
+//         //Since size was incremented by one in newSize, we can just use newSize
+//         arr->size = newSize;
+//         return 0;
+//     }
+
+//     if (index > size) {
+//         arr->entries[index] = data;
+//         arr->size = index + 1;
+//         return 0;
+//     }
+
+//     if ((index >= 0) && (index < size)) {
+//         //We're adding in the middle. Gotta move stuff
+//         //Start from the back
+//         for (int i = size - 1; i >= index; i--) {
+//             arr->entries[i + 1] = arr->entries[i];
+//         }
+//         arr->entries[index] = data;
+//         arr->size = newSize;
+//     }
+
+//     //This means we're either just negative enough or greater
+//     // if ((index >= 0) && (index < size)) {
+//     //     //We're adding in the middle
+//     // }
+
+//     return 1;
+
+//     //JUNK
+//         //No need to do any resizing.
+//     // if (size < cap) {
+//     //     //We want to add at the very back
+//     //     if (index == size) {
+//     //         arr->entries[index] = data;
+//     //         return 0;
+//     //     }
+//     // }
+
+
+
+
+// }
+
 int add_to_array_list(array_list_t* arr, int index, void* data)
 {   
 
+    //TODO: Double check on error stuff
     if (arr == NULL) {
         return 1;
     }
     int newSize = arr->size + 1;
     int size = arr->size;
-    int cap = arr->capacity;
 
-    //TODO: Do some calculations to get the ACTUAL index we will be adding at (accounting for negatives)
-    //The only type of index we need to recalculate
+    //If index is negative, we correct it to be the corresponding positive one
     while(index < 0) {
         index = index + newSize;
     }
 
     //Need to resize
-    if (size == cap) {
-        int success = resize(arr, index);
-        if (success == 1) {
+
+    // if (!((arr->size < arr->capacity) && (index <= arr->capacity))) {
+        array_list_t* success = resize(arr, index);
+        if (success == NULL) {
             //Resizing failed
             return 1;
+        } else {
+            arr = success;
         }
+    // }
+    // if (size == cap) {
+    //     int success = resize(arr, index);
+    //     if (success == 1) {
+    //         //Resizing failed
+    //         return 1;
+    //     }
+    // }
+
+    //ADDING PORTION
+    //At this point, we know the index is correct and we know the array is big enough
+
+    //If adding to the back
+    if (index == size) {
+        arr->entries[index] = data;
+
+        //Since size was incremented by one in newSize, we can just use newSize
+        arr->size = newSize;
+        return 0;
     }
 
-    //No need to do any resizing.
-    if (size < cap) {
-        //We want to add at the very back
-        if (index == size) {
-            arr->entries[index] = data;
-            return 0;
+    if (index > size) {
+        arr->entries[index] = data;
+        arr->size = index + 1;
+        return 0;
+    }
+
+    if ((index >= 0) && (index < size)) {
+        //We're adding in the middle. Gotta move stuff
+        //Start from the back
+        for (int i = size - 1; i >= index; i--) {
+            arr->entries[i + 1] = arr->entries[i];
         }
+        arr->entries[index] = data;
+        arr->size = newSize;
     }
-
-
-
-    //too big, so we'll have to expand
-    if (arr->size == capacity) {
-
-    }
-
-
-    if (index > )
-
 
     //This means we're either just negative enough or greater
-    if ((index >= 0) && (index < size)) {
-        //We're adding in the middle
-    }
-
-    while ()
-    UNUSED_PARAM(arr);
-    UNUSED_PARAM(index);
-    UNUSED_PARAM(data);
+    // if ((index >= 0) && (index < size)) {
+    //     //We're adding in the middle
+    // }
 
     return 1;
+
+    //JUNK
+        //No need to do any resizing.
+    // if (size < cap) {
+    //     //We want to add at the very back
+    //     if (index == size) {
+    //         arr->entries[index] = data;
+    //         return 0;
+    //     }
+    // }
+
+
+
+
 }
 
 /**
@@ -232,22 +340,54 @@ int add_to_array_list(array_list_t* arr, int index, void* data)
  *returns 0 if success and non-zero if not successful
  */
 
-int resize(array_list_t* arr, int index) {
+// int resize(array_list_t* arr, int index) {
+//     int newSize;
+//     int new_cap = arr->capacity;
+
+//     //If we are under capacity, and the index we're adding to is under size
+//     //we are then good to go
+//     if ((arr->size < arr->capacity) && (index <= arr->capacity)) {
+//         return 0;
+//     }
+
+//     while(!(index < new_cap)) {
+//         //multiplies the new capacity by growth factor
+//         new_cap = new_cap * GROWTH_FACTOR;
+//     }
+//     newSize = new_cap * sizeof(void*);
+//     void* temp = realloc(arr, newSize);
+//     if (temp == NULL) {
+//         return 1;
+//     } else {
+//         arr = temp;
+//         arr->capacity = new_cap;
+//         return 0;
+//     }
+
+// }
+
+array_list_t* resize(array_list_t* arr, int index) {
     int newSize;
     int new_cap = arr->capacity;
 
+    //If we are under capacity, and the index we're adding to is under size
+    //we are then good to go
+    if ((arr->size < arr->capacity) && (index <= arr->capacity)) {
+        return arr;
+    }
+
     while(!(index < new_cap)) {
         //multiplies the new capacity by growth factor
-        new_cap = new_cap * arr->GROWTH_FACTOR;
+        new_cap = new_cap * GROWTH_FACTOR;
     }
     newSize = new_cap * sizeof(void*);
     void* temp = realloc(arr, newSize);
     if (temp == NULL) {
-        return 1;
+        return NULL;
     } else {
         arr = temp;
         arr->capacity = new_cap;
-        return 0;
+        return temp;
     }
 
 }
